@@ -41,7 +41,7 @@
 
 sign参数值生成需要4个参数，分别是_m_h5_tk、毫秒时间戳、app_key、请求接口时的data参数数据，注意请求接口时t参数就是用来生成sign值的时间戳，sign和t必须对应，否则鉴权失败。如果登录后才能看的数据，那么请求头中必须包含登录后的cookie，否则有sign值也无法请求到数据。
 
-#### 1.如果是在前端生成，那么直接执行sign.js文件中的sign函数即可
+#### 1.如果是使用JS生成，那么直接用node.js执行sign.js文件中的sign函数即可
 
 ```
 var pre_sign_str = '5655b7041ca049730330701082886efd&1719411639403&12574478&{"componentKey":"wp_pc_shop_basic_info","params":"{\\"memberId\\":\\"b2b-22133374292418351a\\"}"}'
@@ -65,7 +65,7 @@ console.log(sign_str)
 说明：请求接口data参数值，注意要用\转义
 ```
 
-#### 2.如果是Python生成，可以使用PyExecJS库执行js代码（当然也可以自行使用其他方式运行js）
+#### 2.如果是Python生成，可以使用PyExecJS库执行JS代码（需要node.js环境）
 
 ```
 import execjs
@@ -79,6 +79,10 @@ sign = execjs.compile(open(sign_js_path).read()).call('sign', pre_sign_str)
 ```
 
 **注意，生成的sign用来请求接口时，请求头的cookie中也需要使用相同的 _m_h5_tk 值，否则鉴权失败。具体使用可参考本仓库示例代码。**
+
+#### 3.sign值实际是通过pre_sign_str进行md5加密后得到的，直接对其加密即可
+
+
 
 &emsp;
 

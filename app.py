@@ -1,9 +1,11 @@
+import hashlib
 import json
 import re
 import time
 from typing import Dict, Any, Optional
-import httpx
+
 import execjs
+import httpx
 from loguru import logger
 
 """
@@ -27,6 +29,13 @@ headers = {
 
 def get_milliseconds_timestamp() -> int:
     return int(time.time() * 1000)
+
+
+def md5_string(input_string):
+    byte_data = input_string.encode('utf-8')
+    md5_hash = hashlib.md5()
+    md5_hash.update(byte_data)
+    return md5_hash.hexdigest()
 
 
 def jsonp_to_json(jsonp_data: str) -> Dict[str, Any] | None:
@@ -79,6 +88,7 @@ def get_sign_params(_m_h5_tk: str, data: str) -> Dict[str, Any]:
     pre_sign_str = f'{_m_h5_tk.split("_")[0]}&{current_timestamp}&{APP_KEY}&' + data
     sign_js_path = './sign.js'
     sign = execjs.compile(open(sign_js_path).read()).call('sign', pre_sign_str)
+    # sign = md5_string(pre_sign_str)
     return {"sign": sign, "t": current_timestamp}
 
 
